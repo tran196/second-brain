@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
 import { getDocument, getDocuments, getAllTags } from "@/lib/documents";
-import { LayoutWrapper } from "@/components/layout-wrapper";
+import { AppShell } from "@/components/app-shell";
 import { DocumentViewer } from "@/components/document-viewer";
 
 export const dynamic = "force-dynamic";
@@ -20,7 +20,7 @@ interface PageProps {
 
 /**
  * Document detail page
- * Displays a single document with full content, metadata, and linked documents
+ * Full-screen reading experience on mobile
  */
 export default async function DocumentPage({ params }: PageProps) {
   const { slug } = await params;
@@ -29,19 +29,18 @@ export default async function DocumentPage({ params }: PageProps) {
   // Fetch the document
   const document = getDocument(slugPath);
 
-  // Return 404 if document not found
   if (!document) {
     notFound();
   }
 
-  // Fetch sidebar data
+  // Fetch data for shell
   const documents = getDocuments();
   const tags = getAllTags();
 
   return (
-    <LayoutWrapper documents={documents} tags={tags}>
+    <AppShell documents={documents} tags={tags}>
       <DocumentViewer document={document} />
-    </LayoutWrapper>
+    </AppShell>
   );
 }
 
@@ -49,9 +48,6 @@ export default async function DocumentPage({ params }: PageProps) {
 // Metadata
 // ============================================================================
 
-/**
- * Generate dynamic metadata for SEO and social sharing
- */
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
   const slugPath = slug.join("/");

@@ -3,31 +3,26 @@
 import { useMemo } from "react";
 import ReactMarkdown, { Components } from "react-markdown";
 import remarkGfm from "remark-gfm";
-import { Document, documentTypeConfig } from "@/lib/types";
-import { TypeIcon } from "./icons";
-import { format } from "date-fns";
 import Link from "next/link";
+import { Document, documentTypeConfig } from "@/lib/types";
+import { TypeIcon, Icons } from "./icons";
+import { MobileHeader } from "./mobile-header";
+import { format } from "date-fns";
 
 // ============================================================================
 // Types
 // ============================================================================
 
 interface DocumentViewerProps {
-  /** Full document to display */
   document: Document;
 }
 
 // ============================================================================
-// Custom Markdown Components
+// Markdown Components
 // ============================================================================
 
-/**
- * Creates custom React components for markdown rendering
- * Handles internal links, code blocks, and blockquotes
- */
 function createMarkdownComponents(): Components {
   return {
-    // Custom link handling for internal and external links
     a: ({ href, children }) => {
       // Wiki-style links: [[document-name]]
       if (href?.startsWith("[[") && href?.endsWith("]]")) {
@@ -45,7 +40,7 @@ function createMarkdownComponents(): Components {
         return <Link href={`/doc/${cleanHref}`}>{children}</Link>;
       }
 
-      // External links - open in new tab
+      // External links
       return (
         <a href={href} target="_blank" rel="noopener noreferrer">
           {children}
@@ -53,14 +48,12 @@ function createMarkdownComponents(): Components {
       );
     },
 
-    // Enhanced blockquotes with accent border
     blockquote: ({ children }) => (
       <blockquote className="border-l-4 border-accent pl-4 italic text-muted">
         {children}
       </blockquote>
     ),
 
-    // Code blocks - prose styles handle most of it
     code: ({ className, children, ...props }) => (
       <code className={className} {...props}>
         {children}
@@ -79,43 +72,49 @@ interface DocumentHeaderProps {
 
 function DocumentHeader({ document }: DocumentHeaderProps) {
   const typeInfo = documentTypeConfig[document.type];
-
-  const formattedDate = useMemo(
-    () => format(new Date(document.date), "MMMM d, yyyy"),
-    [document.date]
-  );
+  const formattedDate = format(new Date(document.date), "MMMM d, yyyy");
 
   return (
-    <header className="mb-8 pb-8 border-b border-border">
-      {/* Type and date */}
-      <div className="flex items-center gap-2 text-sm text-muted mb-3">
-        <TypeIcon type={document.type} size={16} />
-        <span style={{ color: typeInfo.color }}>{typeInfo.label}</span>
-        <span className="text-border" aria-hidden="true">•</span>
-        <time dateTime={document.date}>{formattedDate}</time>
+    <header className="mb-8 pb-6 border-b border-border">
+      {/* Type badge and date */}
+      <div className="flex items-center gap-2 text-sm mb-4">
+        <span
+          className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium"
+          style={{ backgroundColor: `${typeInfo.color}20`, color: typeInfo.color }}
+        >
+          <TypeIcon type={document.type} size={12} />
+          {typeInfo.label}
+        </span>
+        <span className="text-muted">•</span>
+        <time dateTime={document.date} className="text-muted">
+          {formattedDate}
+        </time>
       </div>
 
       {/* Title */}
-      <h1 className="text-3xl font-bold mb-4">{document.title}</h1>
+      <h1 className="text-2xl lg:text-3xl font-bold mb-4 leading-tight">
+        {document.title}
+      </h1>
 
       {/* Tags */}
       {document.tags.length > 0 && (
-        <nav aria-label="Document tags" className="animate-slide-in">
-          <ul className="flex flex-wrap gap-2 list-none p-0 m-0">
-            {document.tags.map((tag) => (
-              <li key={tag}>
-                <Link
-                  href={`/?tag=${encodeURIComponent(tag)}`}
-                  className="text-xs px-3 py-2 sm:px-2 sm:py-1 bg-surface-hover hover:bg-surface-active 
-                           rounded-full text-muted hover:text-foreground transition-smooth inline-block
-                           min-h-[36px] sm:min-h-[auto] flex items-center touch-manipulation"
-                >
-                  #{tag}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </nav>
+        <div className="flex flex-wrap gap-2">
+          {document.tags.map((tag) => (
+            <Link
+              key={tag}
+              href={`/documents?tag=${encodeURIComponent(tag)}`}
+              className="
+                text-xs px-3 py-1.5 min-h-[32px]
+                bg-surface-hover hover:bg-surface-active
+                rounded-full text-muted hover:text-foreground
+                transition-colors touch-manipulation
+                flex items-center
+              "
+            >
+              #{tag}
+            </Link>
+          ))}
+        </div>
       )}
     </header>
   );
@@ -130,34 +129,39 @@ function LinkedDocuments({ links }: LinkedDocumentsProps) {
 
   return (
     <footer className="mt-12 pt-8 border-t border-border">
-      <h2 className="text-sm font-medium text-muted mb-4">Linked Documents</h2>
-      <nav aria-label="Linked documents">
-        <ul className="flex flex-wrap gap-2 list-none p-0 m-0">
-          {links.map((link) => (
-            <li key={link}>
-              <Link
-                href={`/doc/${link}`}
-                className="flex items-center gap-2 px-4 py-3 sm:px-3 sm:py-2 bg-surface hover:bg-surface-hover 
-                         border border-border rounded-lg text-sm transition-smooth touch-manipulation
-                         min-h-[44px] sm:min-h-[auto]"
-              >
-                {formatLinkLabel(link)}
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </nav>
+      <h2 className="text-sm font-semibold text-muted mb-4 flex items-center gap-2">
+        <Icons.Network size={14} />
+        Linked Documents
+      </h2>
+      <div className="flex flex-wrap gap-2">
+        {links.map((link) => (
+          <Link
+            key={link}
+            href={`/doc/${link}`}
+            className="
+              flex items-center gap-2
+              px-4 py-3 min-h-[48px]
+              bg-surface hover:bg-surface-hover active:bg-surface-active
+              border border-border rounded-xl
+              text-sm transition-colors touch-manipulation
+            "
+          >
+            {formatLinkLabel(link)}
+            <Icons.ChevronRight size={14} className="text-muted" />
+          </Link>
+        ))}
+      </div>
     </footer>
   );
 }
 
-/**
- * Formats a slug into a human-readable label
- * e.g., "concepts/neural-networks" -> "neural-networks"
- */
 function formatLinkLabel(slug: string): string {
   const parts = slug.split("/");
-  return parts[parts.length - 1];
+  const name = parts[parts.length - 1];
+  return name
+    .split("-")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
 }
 
 // ============================================================================
@@ -165,26 +169,36 @@ function formatLinkLabel(slug: string): string {
 // ============================================================================
 
 /**
- * Renders a full document with header, markdown content, and linked documents
- * Supports custom markdown extensions like wiki-style links
+ * Full document viewer with mobile-first design
+ * Optimized reading experience on all devices
  */
 export function DocumentViewer({ document }: DocumentViewerProps) {
-  // Memoize markdown components to prevent recreation on each render
   const components = useMemo(() => createMarkdownComponents(), []);
 
   return (
-    <article className="animate-fade-in" aria-labelledby="document-title">
-      <DocumentHeader document={document} />
+    <>
+      {/* Mobile header with back button */}
+      <MobileHeader
+        title={document.title}
+        showBack
+        backUrl="/documents"
+      />
 
-      {/* Main content */}
-      <div className="prose prose-lg dark:prose-invert max-w-none">
-        <ReactMarkdown remarkPlugins={[remarkGfm]} components={components}>
-          {document.content}
-        </ReactMarkdown>
-      </div>
+      <article className="px-4 py-6 lg:px-8 lg:py-10 animate-fade-in">
+        <div className="max-w-2xl mx-auto">
+          <DocumentHeader document={document} />
 
-      {/* Linked documents */}
-      {document.links && <LinkedDocuments links={document.links} />}
-    </article>
+          {/* Main content */}
+          <div className="prose prose-lg dark:prose-invert max-w-none">
+            <ReactMarkdown remarkPlugins={[remarkGfm]} components={components}>
+              {document.content}
+            </ReactMarkdown>
+          </div>
+
+          {/* Linked documents */}
+          {document.links && <LinkedDocuments links={document.links} />}
+        </div>
+      </article>
+    </>
   );
 }

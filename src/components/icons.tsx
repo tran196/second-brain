@@ -11,9 +11,14 @@ import {
   Menu,
   X,
   ChevronRight,
+  ChevronLeft,
   Hash,
   Network,
   Command,
+  FileText,
+  Settings,
+  Filter,
+  ArrowLeft,
   type LucideIcon,
 } from "lucide-react";
 import { DocumentType } from "@/lib/types";
@@ -37,9 +42,14 @@ export const Icons = {
   Menu,
   X,
   ChevronRight,
+  ChevronLeft,
   Hash,
   Network,
   Command,
+  FileText,
+  Settings,
+  Filter,
+  ArrowLeft,
 } as const;
 
 // ============================================================================

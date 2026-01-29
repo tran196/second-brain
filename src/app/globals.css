@@ -2,13 +2,17 @@
 
 @plugin "@tailwindcss/typography";
 
+/* ============================================================================
+   CSS Variables - Design Tokens
+   ============================================================================ */
+
 :root {
-  /* Light mode (fallback) */
+  /* Light mode */
   --background: #fafafa;
   --foreground: #171717;
   --surface: #f5f5f5;
-  --surface-hover: #e5e5e5;
-  --surface-active: #d4d4d4;
+  --surface-hover: #ebebeb;
+  --surface-active: #e0e0e0;
   --border: #e5e5e5;
   --muted: #737373;
   --accent: #8b5cf6;
@@ -18,88 +22,172 @@
 .dark {
   /* Dark mode - Linear/Apple aesthetic */
   --background: #0a0a0a;
-  --foreground: #ededed;
+  --foreground: #f5f5f5;
   --surface: #141414;
-  --surface-hover: #1c1c1c;
-  --surface-active: #262626;
+  --surface-hover: #1f1f1f;
+  --surface-active: #2a2a2a;
   --border: #262626;
-  --muted: #737373;
+  --muted: #a3a3a3;
   --accent: #8b5cf6;
   --accent-foreground: #ffffff;
 }
 
+/* ============================================================================
+   Base Styles - Mobile First
+   ============================================================================ */
+
 html {
   scroll-behavior: smooth;
+  /* Prevent iOS bounce */
+  overscroll-behavior: none;
 }
 
 body {
   font-feature-settings: "ss01", "ss02", "cv01", "cv02";
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  /* Prevent text size adjustment on orientation change */
+  -webkit-text-size-adjust: 100%;
+  /* Safe area for notched devices */
+  padding-bottom: env(safe-area-inset-bottom);
 }
 
-/* Custom scrollbar */
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+/* ============================================================================
+   Safe Area Support
+   ============================================================================ */
+
+.safe-area-bottom {
+  padding-bottom: max(env(safe-area-inset-bottom), 0px);
 }
 
-::-webkit-scrollbar-track {
-  background: var(--background);
+.safe-area-top {
+  padding-top: env(safe-area-inset-top);
 }
 
-::-webkit-scrollbar-thumb {
-  background: var(--border);
-  border-radius: 4px;
+/* ============================================================================
+   Touch Optimizations
+   ============================================================================ */
+
+/* Prevent double-tap zoom on buttons */
+button, a {
+  touch-action: manipulation;
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background: var(--muted);
+/* Minimum touch target size */
+.touch-target {
+  min-height: 44px;
+  min-width: 44px;
 }
 
-/* Selection */
+/* Touch feedback */
+@media (hover: none) and (pointer: coarse) {
+  button:active,
+  a:active,
+  .touch-manipulation:active {
+    opacity: 0.8;
+    transform: scale(0.98);
+    transition: transform 0.1s ease, opacity 0.1s ease;
+  }
+}
+
+/* ============================================================================
+   Custom Scrollbar (Desktop Only)
+   ============================================================================ */
+
+@media (min-width: 1024px) {
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--muted);
+  }
+}
+
+/* ============================================================================
+   Selection & Focus
+   ============================================================================ */
+
 ::selection {
   background: var(--accent);
   color: var(--accent-foreground);
 }
 
-/* Focus ring improvements */
 *:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
 
-/* Enhanced button focus states */
-button:focus-visible,
-a:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-  border-radius: 4px;
+/* ============================================================================
+   Typography - Mobile First
+   ============================================================================ */
+
+.prose {
+  /* Mobile: 16px base, 1.7 line height for readability */
+  font-size: 1rem;
+  line-height: 1.75;
+  color: var(--foreground);
 }
 
-/* Touch device improvements */
-@media (hover: none) and (pointer: coarse) {
-  /* Better touch feedback */
-  button:active,
-  a:active {
-    transform: scale(0.98);
-    transition: transform 0.1s ease;
+.prose h1, .prose h2, .prose h3, .prose h4 {
+  color: var(--foreground);
+  font-weight: 600;
+  line-height: 1.3;
+  margin-top: 1.5em;
+  margin-bottom: 0.5em;
+}
+
+.prose h1 { font-size: 1.75rem; }
+.prose h2 { font-size: 1.5rem; }
+.prose h3 { font-size: 1.25rem; }
+.prose h4 { font-size: 1.125rem; }
+
+/* Desktop: slightly larger */
+@media (min-width: 1024px) {
+  .prose {
+    font-size: 1.0625rem;
+    line-height: 1.8;
   }
   
-  /* Remove hover effects on touch devices */
-  button:hover,
-  a:hover {
-    background-color: inherit;
-  }
+  .prose h1 { font-size: 2rem; }
+  .prose h2 { font-size: 1.625rem; }
+  .prose h3 { font-size: 1.375rem; }
 }
 
-/* Markdown content styling */
+/* Code blocks */
 .prose pre {
   background: var(--surface) !important;
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: 12px;
   overflow-x: auto;
   font-size: 0.875rem;
+  padding: 1rem;
+  margin: 1.5rem 0;
+  /* Mobile: full-bleed code blocks */
+  margin-left: -1rem;
+  margin-right: -1rem;
+  border-radius: 0;
+  border-left: none;
+  border-right: none;
+}
+
+@media (min-width: 768px) {
+  .prose pre {
+    margin-left: 0;
+    margin-right: 0;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+  }
 }
 
 .prose code:not(pre code) {
@@ -110,53 +198,71 @@ a:focus-visible {
   font-weight: 500;
 }
 
-/* Mobile typography improvements */
-@media (max-width: 768px) {
-  .prose {
-    font-size: 1rem;
-    line-height: 1.7;
-  }
-  
-  .prose h1, .prose h2, .prose h3 {
-    line-height: 1.3;
-    margin-top: 1.5rem;
-  }
-  
-  .prose h1 {
-    font-size: 1.875rem;
-  }
-  
-  .prose h2 {
-    font-size: 1.5rem;
-  }
-  
-  .prose h3 {
-    font-size: 1.25rem;
-  }
-  
-  .prose pre {
-    font-size: 0.8rem;
-    margin-left: -1rem;
-    margin-right: -1rem;
-    border-radius: 0;
-    border-left: none;
-    border-right: none;
-  }
-}
-
+/* Links */
 .prose a {
+  color: var(--accent);
   text-decoration: none;
-  border-bottom: 1px solid var(--accent);
+  border-bottom: 1px solid transparent;
   transition: border-color 0.15s;
 }
 
 .prose a:hover {
-  border-bottom-color: transparent;
+  border-bottom-color: var(--accent);
 }
 
-/* Animations */
+/* Blockquotes */
+.prose blockquote {
+  border-left: 3px solid var(--accent);
+  padding-left: 1rem;
+  margin-left: 0;
+  font-style: italic;
+  color: var(--muted);
+}
+
+/* Lists */
+.prose ul, .prose ol {
+  padding-left: 1.25rem;
+}
+
+.prose li {
+  margin: 0.375rem 0;
+}
+
+/* Images */
+.prose img {
+  border-radius: 12px;
+  margin: 1.5rem 0;
+}
+
+/* Tables */
+.prose table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+.prose th, .prose td {
+  padding: 0.75rem;
+  border: 1px solid var(--border);
+  text-align: left;
+}
+
+.prose th {
+  background: var(--surface);
+  font-weight: 600;
+}
+
+/* ============================================================================
+   Animations
+   ============================================================================ */
+
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(16px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
@@ -169,31 +275,42 @@ a:focus-visible {
   animation: fadeIn 0.3s ease-out;
 }
 
+.animate-slide-up {
+  animation: slideUp 0.4s ease-out;
+}
+
 .animate-slide-in {
   animation: slideIn 0.2s ease-out;
 }
 
-/* Smooth transitions for interactive elements */
-.transition-smooth {
-  transition: all 0.2s ease-out;
+/* Staggered animations */
+.animate-stagger > * {
+  animation: fadeIn 0.3s ease-out backwards;
 }
 
-/* Reduced motion preferences */
+.animate-stagger > *:nth-child(1) { animation-delay: 0ms; }
+.animate-stagger > *:nth-child(2) { animation-delay: 50ms; }
+.animate-stagger > *:nth-child(3) { animation-delay: 100ms; }
+.animate-stagger > *:nth-child(4) { animation-delay: 150ms; }
+.animate-stagger > *:nth-child(5) { animation-delay: 200ms; }
+
+/* ============================================================================
+   Reduced Motion
+   ============================================================================ */
+
 @media (prefers-reduced-motion: reduce) {
-  .animate-fade-in,
-  .animate-slide-in {
-    animation: none;
-  }
-  
-  .transition-smooth,
-  * {
+  *, *::before, *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }
 
-/* Keyboard shortcut styling */
+/* ============================================================================
+   Keyboard Shortcuts
+   ============================================================================ */
+
 kbd {
   display: inline-flex;
   align-items: center;
@@ -207,4 +324,37 @@ kbd {
   border: 1px solid var(--border);
   border-radius: 4px;
   box-shadow: 0 1px 0 var(--border);
+}
+
+/* ============================================================================
+   Utility Classes
+   ============================================================================ */
+
+.transition-smooth {
+  transition: all 0.2s ease-out;
+}
+
+/* Line clamp */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Hide scrollbar but keep functionality */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
 }

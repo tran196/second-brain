@@ -1,9 +1,10 @@
 import Link from "next/link";
 import { getDocuments, getAllTags } from "@/lib/documents";
-import { LayoutWrapper } from "@/components/layout-wrapper";
+import { AppShell } from "@/components/app-shell";
+import { MobileHeader } from "@/components/mobile-header";
+import { DocumentCard } from "@/components/document-card";
 import { TypeIcon } from "@/components/icons";
-import { documentTypeConfig, DocumentType, DocumentMeta, DOCUMENT_TYPES } from "@/lib/types";
-import { format } from "date-fns";
+import { documentTypeConfig, DocumentType, DOCUMENT_TYPES } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
 
@@ -20,44 +21,40 @@ interface TypeStat {
 // Sub-components
 // ============================================================================
 
-interface HeroProps {
-  documentCount: number;
-}
-
-function Hero({ documentCount }: HeroProps) {
+function Hero({ documentCount }: { documentCount: number }) {
   return (
-    <div className="mb-12">
-      <h1 className="text-4xl font-bold mb-4">Welcome to your Second Brain</h1>
-      <p className="text-lg text-muted">
-        Your interconnected knowledge base with {documentCount} document
-        {documentCount !== 1 ? "s" : ""}
+    <div className="mb-8">
+      <h1 className="text-2xl lg:text-3xl font-bold mb-2">
+        Welcome back
+      </h1>
+      <p className="text-muted">
+        {documentCount} document{documentCount !== 1 ? "s" : ""} in your brain
       </p>
     </div>
   );
 }
 
-interface StatsGridProps {
-  stats: TypeStat[];
-}
-
-function StatsGrid({ stats }: StatsGridProps) {
+function StatsGrid({ stats }: { stats: TypeStat[] }) {
   return (
-    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12" role="list">
+    <div className="grid grid-cols-2 gap-3 mb-8" role="list">
       {stats.map(({ type, count }) => (
         <Link
           key={type}
-          href={`/?type=${type}`}
-          className="p-4 bg-surface hover:bg-surface-hover border border-border rounded-xl 
-                   transition-colors group"
-          role="listitem"
-          aria-label={`${count} ${documentTypeConfig[type].label}${count !== 1 ? "s" : ""}`}
+          href={`/documents?type=${type}`}
+          className="
+            flex items-center gap-3 p-4
+            bg-surface hover:bg-surface-hover active:bg-surface-active
+            border border-border rounded-xl
+            transition-colors touch-manipulation
+            min-h-[72px]
+          "
         >
-          <div className="flex items-center gap-3 mb-2">
-            <TypeIcon type={type} size={20} />
-            <span className="text-2xl font-bold">{count}</span>
-          </div>
-          <div className="text-sm text-muted group-hover:text-foreground transition-colors">
-            {documentTypeConfig[type].label}{count !== 1 ? "s" : ""}
+          <TypeIcon type={type} size={24} />
+          <div>
+            <div className="text-xl font-bold">{count}</div>
+            <div className="text-xs text-muted">
+              {documentTypeConfig[type].label}{count !== 1 ? "s" : ""}
+            </div>
           </div>
         </Link>
       ))}
@@ -65,57 +62,25 @@ function StatsGrid({ stats }: StatsGridProps) {
   );
 }
 
-interface DocumentCardProps {
-  doc: DocumentMeta;
-}
-
-function DocumentCard({ doc }: DocumentCardProps) {
-  const formattedDate = format(new Date(doc.date), "MMM d, yyyy");
-
+function RecentSection({ documents }: { documents: ReturnType<typeof getDocuments> }) {
   return (
-    <Link
-      href={`/doc/${doc.slug}`}
-      className="flex items-start gap-4 p-4 bg-surface hover:bg-surface-hover 
-               border border-border rounded-xl transition-colors group"
-    >
-      <TypeIcon type={doc.type} size={20} />
-      <div className="flex-1 min-w-0">
-        <h3 className="font-medium group-hover:text-accent transition-colors">
-          {doc.title}
-        </h3>
-        {doc.excerpt && (
-          <p className="text-sm text-muted line-clamp-2 mt-1">{doc.excerpt}</p>
-        )}
-        <div className="flex items-center gap-3 mt-2 text-xs text-muted">
-          <time dateTime={doc.date}>{formattedDate}</time>
-          {doc.tags.length > 0 && (
-            <span className="flex gap-1" aria-label="Tags">
-              {doc.tags.slice(0, 3).map((tag) => (
-                <span key={tag}>#{tag}</span>
-              ))}
-            </span>
-          )}
-        </div>
+    <section className="mb-8" aria-labelledby="recent-heading">
+      <div className="flex items-center justify-between mb-4">
+        <h2 id="recent-heading" className="text-lg font-semibold">
+          Recent
+        </h2>
+        <Link
+          href="/documents"
+          className="text-sm text-accent hover:underline"
+        >
+          View all
+        </Link>
       </div>
-    </Link>
-  );
-}
-
-interface RecentDocumentsProps {
-  documents: DocumentMeta[];
-}
-
-function RecentDocuments({ documents }: RecentDocumentsProps) {
-  return (
-    <section className="mb-12" aria-labelledby="recent-heading">
-      <h2 id="recent-heading" className="text-xl font-semibold mb-4">
-        Recent Documents
-      </h2>
 
       {documents.length > 0 ? (
-        <div className="space-y-2">
+        <div className="space-y-3 animate-stagger">
           {documents.map((doc) => (
-            <DocumentCard key={doc.slug} doc={doc} />
+            <DocumentCard key={doc.slug} document={doc} />
           ))}
         </div>
       ) : (
@@ -127,10 +92,10 @@ function RecentDocuments({ documents }: RecentDocumentsProps) {
 
 function EmptyState() {
   return (
-    <div className="text-center py-12 text-muted" role="status">
-      <p className="mb-2">No documents yet</p>
-      <p className="text-sm">
-        Add markdown files to <code className="bg-surface px-1 rounded">~/clawd/brain/</code> to get started
+    <div className="text-center py-12 px-4 bg-surface border border-border rounded-xl">
+      <p className="text-muted mb-2">No documents yet</p>
+      <p className="text-sm text-muted">
+        Add markdown files to <code className="bg-surface-hover px-1.5 py-0.5 rounded text-xs">~/clawd/brain/</code>
       </p>
     </div>
   );
@@ -138,27 +103,46 @@ function EmptyState() {
 
 function QuickActions() {
   return (
-    <section aria-labelledby="actions-heading">
-      <h2 id="actions-heading" className="text-xl font-semibold mb-4">
+    <section aria-labelledby="actions-heading" className="mb-8">
+      <h2 id="actions-heading" className="text-lg font-semibold mb-4">
         Quick Actions
       </h2>
-      <div className="flex flex-wrap gap-3 mb-4">
+      <div className="flex gap-3">
         <Link
           href="/graph"
-          className="inline-flex items-center gap-2 px-4 py-2 bg-surface hover:bg-surface-hover
-                   border border-border rounded-lg text-sm transition-colors"
+          className="
+            flex-1 flex items-center justify-center gap-2
+            p-4 min-h-[56px]
+            bg-surface hover:bg-surface-hover active:bg-surface-active
+            border border-border rounded-xl
+            text-sm font-medium
+            transition-colors touch-manipulation
+          "
         >
-          <span aria-hidden="true">🌐</span> Graph View
+          <span aria-hidden="true">🌐</span>
+          <span>Graph View</span>
+        </Link>
+        <Link
+          href="/search"
+          className="
+            flex-1 flex items-center justify-center gap-2
+            p-4 min-h-[56px]
+            bg-surface hover:bg-surface-hover active:bg-surface-active
+            border border-border rounded-xl
+            text-sm font-medium
+            transition-colors touch-manipulation
+          "
+        >
+          <span aria-hidden="true">🔍</span>
+          <span>Search</span>
         </Link>
       </div>
-      <div className="text-xs text-muted space-y-1">
-        <div>Keyboard shortcuts:</div>
-        <div className="flex flex-wrap gap-4">
-          <span><kbd className="font-mono text-xs">⌘K</kbd> Search</span>
-          <span><kbd className="font-mono text-xs">G</kbd> Graph view</span>
-          <span><kbd className="font-mono text-xs">H</kbd> Home</span>
-          <span><kbd className="font-mono text-xs">ESC</kbd> Close sidebar</span>
-        </div>
+      
+      {/* Desktop-only keyboard hints */}
+      <div className="hidden lg:flex gap-4 mt-4 text-xs text-muted">
+        <span><kbd>⌘K</kbd> Search</span>
+        <span><kbd>G</kbd> Graph</span>
+        <span><kbd>H</kbd> Home</span>
       </div>
     </section>
   );
@@ -168,30 +152,29 @@ function QuickActions() {
 // Page Component
 // ============================================================================
 
-/**
- * Home page showing document stats, recent documents, and quick actions
- */
 export default function Home() {
   const documents = getDocuments();
   const tags = getAllTags();
 
-  // Calculate stats by type
+  // Calculate stats
   const stats: TypeStat[] = DOCUMENT_TYPES.map((type) => ({
     type,
     count: documents.filter((d) => d.type === type).length,
   }));
 
-  // Get 5 most recent documents
+  // Recent documents
   const recentDocs = documents.slice(0, 5);
 
   return (
-    <LayoutWrapper documents={documents} tags={tags}>
-      <div className="animate-fade-in">
+    <AppShell documents={documents} tags={tags}>
+      <MobileHeader title="Second Brain" />
+      
+      <div className="px-4 py-6 lg:px-8 lg:py-10 animate-fade-in">
         <Hero documentCount={documents.length} />
         <StatsGrid stats={stats} />
-        <RecentDocuments documents={recentDocs} />
+        <RecentSection documents={recentDocs} />
         <QuickActions />
       </div>
-    </LayoutWrapper>
+    </AppShell>
   );
 }
