@@ -52,7 +52,8 @@ export function DocumentCard({ document, compact = false }: DocumentCardProps) {
         block p-4
         bg-surface hover:bg-surface-hover active:bg-surface-active
         border border-border rounded-xl
-        transition-colors touch-manipulation
+        transition-all duration-200 touch-manipulation
+        hover:border-accent/30 hover:shadow-sm
       "
     >
       {/* Header */}

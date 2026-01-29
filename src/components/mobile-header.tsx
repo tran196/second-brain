@@ -43,8 +43,8 @@ export function MobileHeader({ title = "Second Brain", showBack = false, backUrl
     <header
       className="
         sticky top-0 z-40
-        bg-background/95 backdrop-blur-md
-        border-b border-border
+        bg-background/80 backdrop-blur-xl backdrop-saturate-150
+        border-b border-border/50
         lg:hidden
       "
     >

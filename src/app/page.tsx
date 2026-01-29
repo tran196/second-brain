@@ -45,8 +45,10 @@ function StatsGrid({ stats }: { stats: TypeStat[] }) {
             flex items-center gap-3 p-4
             bg-surface hover:bg-surface-hover active:bg-surface-active
             border border-border rounded-xl
-            transition-colors touch-manipulation
+            transition-all duration-200 touch-manipulation
             min-h-[72px]
+            hover:border-accent/30 hover:scale-[1.02]
+            active:scale-[0.98]
           "
         >
           <TypeIcon type={type} size={24} />
@@ -92,11 +94,15 @@ function RecentSection({ documents }: { documents: ReturnType<typeof getDocument
 
 function EmptyState() {
   return (
-    <div className="text-center py-12 px-4 bg-surface border border-border rounded-xl">
-      <p className="text-muted mb-2">No documents yet</p>
-      <p className="text-sm text-muted">
-        Add markdown files to <code className="bg-surface-hover px-1.5 py-0.5 rounded text-xs">~/clawd/brain/</code>
+    <div className="text-center py-16 px-4 bg-surface border border-border rounded-xl">
+      <div className="text-4xl mb-4">🧠</div>
+      <h3 className="font-semibold mb-2">Your brain is empty</h3>
+      <p className="text-sm text-muted mb-4">
+        Add markdown files to get started
       </p>
+      <code className="text-xs bg-surface-hover px-3 py-1.5 rounded-lg text-muted">
+        ~/clawd/brain/
+      </code>
     </div>
   );
 }
@@ -113,10 +119,12 @@ function QuickActions() {
           className="
             flex-1 flex items-center justify-center gap-2
             p-4 min-h-[56px]
-            bg-surface hover:bg-surface-hover active:bg-surface-active
-            border border-border rounded-xl
+            bg-gradient-to-br from-violet-500/10 to-purple-500/5
+            hover:from-violet-500/20 hover:to-purple-500/10
+            border border-violet-500/20 rounded-xl
             text-sm font-medium
-            transition-colors touch-manipulation
+            transition-all duration-200 touch-manipulation
+            hover:scale-[1.02] active:scale-[0.98]
           "
         >
           <span aria-hidden="true">🌐</span>
@@ -127,10 +135,12 @@ function QuickActions() {
           className="
             flex-1 flex items-center justify-center gap-2
             p-4 min-h-[56px]
-            bg-surface hover:bg-surface-hover active:bg-surface-active
-            border border-border rounded-xl
+            bg-gradient-to-br from-blue-500/10 to-cyan-500/5
+            hover:from-blue-500/20 hover:to-cyan-500/10
+            border border-blue-500/20 rounded-xl
             text-sm font-medium
-            transition-colors touch-manipulation
+            transition-all duration-200 touch-manipulation
+            hover:scale-[1.02] active:scale-[0.98]
           "
         >
           <span aria-hidden="true">🔍</span>

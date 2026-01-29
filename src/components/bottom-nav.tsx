@@ -43,7 +43,8 @@ function NavButton({ item, isActive }: NavButtonProps) {
       href={item.href}
       className={`
         flex flex-col items-center justify-center gap-1 flex-1 py-2
-        min-h-[56px] touch-manipulation transition-colors
+        min-h-[56px] touch-manipulation transition-all duration-200
+        relative
         ${isActive 
           ? "text-accent" 
           : "text-muted hover:text-foreground active:text-foreground"
@@ -51,6 +52,10 @@ function NavButton({ item, isActive }: NavButtonProps) {
       `}
       aria-current={isActive ? "page" : undefined}
     >
+      {/* Active indicator dot */}
+      {isActive && (
+        <span className="absolute top-1.5 w-1 h-1 rounded-full bg-accent" />
+      )}
       <Icon size={22} strokeWidth={isActive ? 2.5 : 2} />
       <span className="text-[10px] font-medium">{item.label}</span>
     </Link>
@@ -77,8 +82,8 @@ export function BottomNav() {
     <nav
       className="
         fixed bottom-0 left-0 right-0 z-50
-        bg-background/95 backdrop-blur-md
-        border-t border-border
+        bg-background/80 backdrop-blur-xl backdrop-saturate-150
+        border-t border-border/50
         safe-area-bottom
         lg:hidden
       "

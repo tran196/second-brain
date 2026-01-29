@@ -273,17 +273,29 @@ export default function DocumentsPage() {
     return (
       <AppShell documents={[]} tags={[]}>
         <MobileHeader title="Documents" />
-        <div className="px-4 py-6">
+        <div className="px-4 py-6 lg:px-8 lg:py-10">
           <div className="animate-pulse space-y-4">
-            <div className="h-8 bg-surface rounded w-32" />
-            <div className="h-12 bg-surface rounded-xl" />
-            <div className="flex gap-2">
-              {[1, 2, 3, 4].map((i) => (
-                <div key={i} className="h-10 w-20 bg-surface rounded-full" />
+            <div className="h-8 bg-surface-hover rounded w-32" />
+            <div className="h-12 bg-surface-hover rounded-xl" />
+            <div className="flex gap-2 overflow-hidden">
+              {[1, 2, 3, 4, 5].map((i) => (
+                <div key={i} className="h-11 w-24 bg-surface-hover rounded-full flex-shrink-0" />
               ))}
             </div>
-            {[1, 2, 3].map((i) => (
-              <div key={i} className="h-24 bg-surface rounded-xl" />
+            <div className="h-4 bg-surface-hover rounded w-24" />
+            {[1, 2, 3, 4, 5].map((i) => (
+              <div key={i} className="p-4 bg-surface border border-border rounded-xl space-y-3">
+                <div className="flex items-center gap-2">
+                  <div className="w-4 h-4 bg-surface-hover rounded" />
+                  <div className="h-3 bg-surface-hover rounded w-20" />
+                </div>
+                <div className="h-5 bg-surface-hover rounded w-3/4" />
+                <div className="h-3 bg-surface-hover rounded w-full" />
+                <div className="flex gap-2">
+                  <div className="h-5 w-12 bg-surface-hover rounded-full" />
+                  <div className="h-5 w-16 bg-surface-hover rounded-full" />
+                </div>
+              </div>
             ))}
           </div>
         </div>
