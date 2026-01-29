@@ -254,14 +254,29 @@ export function Sidebar({ documents, tags, isOpen, onClose }: SidebarProps) {
               />
               <input
                 type="search"
-                placeholder="Search... (⌘K)"
+                placeholder="Search documents... (⌘K)"
                 value={searchQuery}
                 onChange={handleSearchChange}
                 aria-label="Search documents"
-                className="w-full pl-9 pr-4 py-2 bg-background border border-border rounded-lg 
-                         text-sm placeholder:text-muted focus:outline-none focus:border-accent"
+                className="w-full pl-9 pr-10 py-3 sm:py-2 bg-background border border-border rounded-lg 
+                         text-sm placeholder:text-muted focus:outline-none focus:border-accent
+                         transition-smooth min-h-[44px] sm:min-h-[auto] touch-manipulation"
               />
+              {searchQuery && (
+                <button
+                  onClick={() => setSearchQuery("")}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 p-1 hover:bg-surface-hover rounded touch-manipulation"
+                  aria-label="Clear search"
+                >
+                  <Icons.X size={14} className="text-muted" />
+                </button>
+              )}
             </div>
+            {searchQuery && (
+              <div className="text-xs text-muted mt-2">
+                {filteredDocs.length} result{filteredDocs.length !== 1 ? 's' : ''} for "{searchQuery}"
+              </div>
+            )}
           </div>
 
           {/* Type filters */}
