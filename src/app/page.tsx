@@ -142,7 +142,7 @@ function QuickActions() {
       <h2 id="actions-heading" className="text-xl font-semibold mb-4">
         Quick Actions
       </h2>
-      <div className="flex flex-wrap gap-3">
+      <div className="flex flex-wrap gap-3 mb-4">
         <Link
           href="/graph"
           className="inline-flex items-center gap-2 px-4 py-2 bg-surface hover:bg-surface-hover
@@ -150,11 +150,14 @@ function QuickActions() {
         >
           <span aria-hidden="true">🌐</span> Graph View
         </Link>
-        <div className="inline-flex items-center gap-2 px-4 py-2 bg-surface border border-border rounded-lg text-sm">
-          <span aria-hidden="true">📝</span>
-          <span>Keyboard:</span>
-          <kbd className="font-mono">⌘K</kbd>
-          <span>to search</span>
+      </div>
+      <div className="text-xs text-muted space-y-1">
+        <div>Keyboard shortcuts:</div>
+        <div className="flex flex-wrap gap-4">
+          <span><kbd className="font-mono text-xs">⌘K</kbd> Search</span>
+          <span><kbd className="font-mono text-xs">G</kbd> Graph view</span>
+          <span><kbd className="font-mono text-xs">H</kbd> Home</span>
+          <span><kbd className="font-mono text-xs">ESC</kbd> Close sidebar</span>
         </div>
       </div>
     </section>

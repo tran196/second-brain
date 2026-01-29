@@ -24,7 +24,7 @@ interface LayoutWrapperProps {
 
 /**
  * Hook for handling keyboard shortcuts
- * Currently supports: ⌘K for search focus, Escape to close sidebar
+ * Supports: ⌘K for search focus, Escape to close sidebar, G for graph view, H for home
  */
 function useKeyboardShortcuts(
   onOpenSidebar: () => void,
@@ -32,6 +32,16 @@ function useKeyboardShortcuts(
 ): void {
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
+      // Don't trigger shortcuts when typing in input fields
+      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) {
+        // Except for Escape key
+        if (e.key === "Escape") {
+          (e.target as HTMLElement).blur();
+          onCloseSidebar();
+        }
+        return;
+      }
+
       // ⌘K or Ctrl+K for search
       if ((e.metaKey || e.ctrlKey) && e.key === "k") {
         e.preventDefault();
@@ -49,6 +59,18 @@ function useKeyboardShortcuts(
       // Escape to close sidebar
       if (e.key === "Escape") {
         onCloseSidebar();
+      }
+
+      // G for Graph view
+      if (e.key === "g" && !e.metaKey && !e.ctrlKey && !e.altKey) {
+        e.preventDefault();
+        window.location.href = "/graph";
+      }
+
+      // H for Home
+      if (e.key === "h" && !e.metaKey && !e.ctrlKey && !e.altKey) {
+        e.preventDefault();
+        window.location.href = "/";
       }
     },
     [onOpenSidebar, onCloseSidebar]
