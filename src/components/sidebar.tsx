@@ -104,7 +104,8 @@ function FilterButton({ children, active, onClick, ariaLabel }: FilterButtonProp
       aria-label={ariaLabel}
       aria-pressed={active}
       className={`
-        flex items-center gap-1.5 px-3 py-1.5 text-sm rounded-lg transition-colors
+        flex items-center gap-1.5 px-3 py-2 sm:py-1.5 text-sm rounded-lg transition-colors
+        min-h-[44px] sm:min-h-[auto] touch-manipulation
         ${active
           ? "bg-accent text-accent-foreground"
           : "bg-surface-hover hover:bg-surface-active text-muted hover:text-foreground"
@@ -128,7 +129,8 @@ function DocLink({ doc, isActive, onClick }: DocLinkProps) {
       onClick={onClick}
       aria-current={isActive ? "page" : undefined}
       className={`
-        flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors
+        flex items-center gap-3 px-3 py-3 sm:py-2 rounded-lg text-sm transition-colors
+        min-h-[48px] sm:min-h-[auto] touch-manipulation
         ${isActive
           ? "bg-accent/10 text-foreground"
           : "hover:bg-surface-hover text-muted hover:text-foreground"
@@ -300,7 +302,8 @@ export function Sidebar({ documents, tags, isOpen, onClose }: SidebarProps) {
                     onClick={() => handleTagClick(tag)}
                     aria-pressed={activeTag === tag}
                     className={`
-                      text-xs px-2 py-1 rounded-full transition-colors
+                      text-xs px-3 py-2 sm:px-2 sm:py-1 rounded-full transition-colors
+                      min-h-[40px] sm:min-h-[auto] touch-manipulation
                       ${activeTag === tag
                         ? "bg-accent text-accent-foreground"
                         : "bg-surface-hover hover:bg-surface-active text-muted hover:text-foreground"

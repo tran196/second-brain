@@ -74,7 +74,7 @@ function MobileHeader({ onMenuClick }: MobileHeaderProps) {
       <div className="flex items-center gap-4 px-4 h-14">
         <button
           onClick={onMenuClick}
-          className="p-2 hover:bg-surface-hover rounded-lg"
+          className="p-3 hover:bg-surface-hover rounded-lg touch-manipulation min-h-[44px] min-w-[44px] flex items-center justify-center"
           aria-label="Open navigation menu"
         >
           <Icons.Menu size={20} aria-hidden />
