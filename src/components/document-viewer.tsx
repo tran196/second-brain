@@ -100,14 +100,15 @@ function DocumentHeader({ document }: DocumentHeaderProps) {
 
       {/* Tags */}
       {document.tags.length > 0 && (
-        <nav aria-label="Document tags">
+        <nav aria-label="Document tags" className="animate-slide-in">
           <ul className="flex flex-wrap gap-2 list-none p-0 m-0">
             {document.tags.map((tag) => (
               <li key={tag}>
                 <Link
                   href={`/?tag=${encodeURIComponent(tag)}`}
-                  className="text-xs px-2 py-1 bg-surface-hover hover:bg-surface-active 
-                           rounded-full text-muted hover:text-foreground transition-colors inline-block"
+                  className="text-xs px-3 py-2 sm:px-2 sm:py-1 bg-surface-hover hover:bg-surface-active 
+                           rounded-full text-muted hover:text-foreground transition-smooth inline-block
+                           min-h-[36px] sm:min-h-[auto] flex items-center touch-manipulation"
                 >
                   #{tag}
                 </Link>
@@ -136,8 +137,9 @@ function LinkedDocuments({ links }: LinkedDocumentsProps) {
             <li key={link}>
               <Link
                 href={`/doc/${link}`}
-                className="flex items-center gap-2 px-3 py-2 bg-surface hover:bg-surface-hover 
-                         border border-border rounded-lg text-sm transition-colors"
+                className="flex items-center gap-2 px-4 py-3 sm:px-3 sm:py-2 bg-surface hover:bg-surface-hover 
+                         border border-border rounded-lg text-sm transition-smooth touch-manipulation
+                         min-h-[44px] sm:min-h-[auto]"
               >
                 {formatLinkLabel(link)}
               </Link>
