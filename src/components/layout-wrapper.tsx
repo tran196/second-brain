@@ -87,8 +87,50 @@ function MobileHeader({ onMenuClick }: MobileHeaderProps) {
 
 function LoadingFallback() {
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center">
-      <div className="animate-pulse text-muted">Loading...</div>
+    <div className="min-h-screen bg-background">
+      {/* Mobile header skeleton */}
+      <div className="lg:hidden border-b border-border">
+        <div className="flex items-center gap-4 px-4 h-14">
+          <div className="w-11 h-11 bg-surface-hover rounded-lg animate-pulse" />
+          <div className="w-24 h-5 bg-surface-hover rounded animate-pulse" />
+        </div>
+      </div>
+      
+      <div className="flex">
+        {/* Sidebar skeleton */}
+        <div className="hidden lg:block w-72 h-screen bg-surface border-r border-border">
+          <div className="p-4 space-y-4">
+            <div className="w-32 h-6 bg-surface-hover rounded animate-pulse" />
+            <div className="w-full h-10 bg-surface-hover rounded-lg animate-pulse" />
+            <div className="space-y-2">
+              {[...Array(3)].map((_, i) => (
+                <div key={i} className="w-20 h-8 bg-surface-hover rounded-full animate-pulse" />
+              ))}
+            </div>
+            <div className="space-y-3">
+              {[...Array(5)].map((_, i) => (
+                <div key={i} className="space-y-2">
+                  <div className="w-full h-4 bg-surface-hover rounded animate-pulse" />
+                  <div className="w-24 h-3 bg-surface-hover rounded animate-pulse" />
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+        
+        {/* Main content skeleton */}
+        <div className="flex-1 p-6 lg:p-8">
+          <div className="max-w-4xl mx-auto space-y-6">
+            <div className="w-64 h-8 bg-surface-hover rounded animate-pulse" />
+            <div className="w-32 h-4 bg-surface-hover rounded animate-pulse" />
+            <div className="space-y-4">
+              {[...Array(4)].map((_, i) => (
+                <div key={i} className="w-full h-4 bg-surface-hover rounded animate-pulse" />
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
